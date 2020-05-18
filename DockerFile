@@ -1,34 +1,24 @@
 LABEL name="NAFWS" \
-      author="David Arteaga david.arteaga@globant --> Cybersec Studio" \
+      author="David --> david.arteaga@globant --> Cybersec Studio" \
       description="Not A Fancy Web Service --> A simple python WS for security demos/testing" \
-      version="1,0"
+      version="1.0.1"
 FROM ubuntu:latest
 
-RUN apt update -y && apt install python3 python3-pip -y
+RUN apt update -y && apt install python3 python3-pip git -y
 
 WORKDIR /home/
-#Decidir si se hace un pull del codigo de un repo github o copiarlo del PATH del container
-#Caso 1.1 (va puntiando)
-RUN git pull github.globant.co/david-arteaga/NAFWS 
+RUN git clone https://github.corp.globant.com/david-arteaga/NAFWS.git
+RUN cd NAFWS
 
-#Caso 1.2 (ni idea si asi sirva :P )
-RUN mkdir NAFWS && cd NAFWS
-COPY ./app.py ./app.py
-
-#Decidir si instalar los modulos de Flask desde un requieremts (esto hay que averiguar si siempre se asigna hardcoded una version cosa que no me gusta);
-#por lo que naces el otro caso de instalar el modulo desde la consola
-
-#Caso 2.1
-COPY ./requirements.txt ./requierements.txt
-RUN python3 -m pip install -r requierements.txt
+#RUN python3 -m pip install -r requierements.txt
 #o
 RUN pip3 install -r requierements.txt
 
 #Caso 2.2
-RUN python3 -m pip install flask
+#RUN python3 -m pip install flask
 #o
-RUN pip3 install flask
+#RUN pip3 install flask
 
 EXPOSE 5000
 
-CMD ["python3","nafws"]
+CMD ["python3","nafws.py"]
