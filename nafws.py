@@ -5,22 +5,22 @@ app = Flask(__name__)
 
 @app.errorhandler(400)
 def bad_request(error):
-    return make_response(jsonify({'error': 'Bad request'}), 400)
+    return make_response(jsonify({'code':'400', 'error': 'Bad request'}), 400)
 
 @app.errorhandler(401)
 def bad_request(error):
-    return make_response(jsonify({'error': 'Unauthorized'}), 401)
+    return make_response(jsonify({'code':'401', 'error': 'Unauthorized'}), 401)
 
 @app.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    return make_response(jsonify({'code':'404', 'error': 'Not found'}), 404)
 
 @app.route('/')
 def home():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
-        return make_response(jsonify({"response":"Hello Baus!"}), 200)
+        return make_response(jsonify({"code":"200","response":"Correct credentials"}), 200)
 
 @app.route('/login', methods=['POST'])
 def do_admin_login():
@@ -31,10 +31,11 @@ def do_admin_login():
             session['logged_in'] = True
             return home()
         else:
+            print("Incorrect Credentials")
             abort(401)
     else:
-        abort(400) 
-
+        print("No JSON?", request)
+        abort(400)
 
 def banner():
     return """
@@ -51,7 +52,7 @@ def banner():
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
 
      ----------------------------By David --> david.arteaga@globant.com------------------------
-                                                V1.0.1
+                                                V1.0.2
 """
 
 if __name__ == "__main__":
