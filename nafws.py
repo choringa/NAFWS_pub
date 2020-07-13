@@ -52,10 +52,11 @@ def banner():
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
 
      ----------------------------By David --> david.arteaga@globant.com------------------------
-                                                V1.0.2
+                                                V1.0.3
 """
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
     print (banner())
-    app.run(debug=True,host='0.0.0.0', port=5000)
+    app.run(debug=True,host='0.0.0.0', port=5000, ssl_context=('test_cert.pem', 'test_key.pem')) #secure
+    #app.run(debug=True,host='0.0.0.0', port=5000) #insecure

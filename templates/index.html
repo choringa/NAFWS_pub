@@ -6,7 +6,12 @@
         <meta charset="UTF-8">
     </head>
     <body>
-        <h1>This is a "NOT FANCY WS", not a web page!! (╯°□°）╯︵ ┻┻</h1>
+        <h1>This is a "Not A Fancy Web Service", not a web page!! (╯°□°）╯︵ ┻┻</h1>
         <h2>Go curl yo' self</h2>
+        <h3>If secure</h3>
+        <p>curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"username":"admin","password":"password"}' https://[ip]:5000/login --insecure</p>
+        <p>( yes --insecure tag cos' it's a self signed certificade ;)</p>
+        <h3>If not</h3>
+        <p>curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d "{'username':'admin','password':'password'}" [ip]:5000/login</p>
     </body>
 </html>
