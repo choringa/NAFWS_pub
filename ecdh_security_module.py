@@ -23,9 +23,10 @@ def generateKeys():
     curve = reg.get_curve('secp256r1')
     #Generating Server private 
     server_private_key = secrets.randbelow(curve.field.n)
+    #server_private_key = 1 # Prueba con key harcodeada
     #print("Z(p): ", curve.field.n)
     print("generateKeys --> Server private key: ", server_private_key)
-    #Generate Server publickey from the private key and Generator point
+    # Generate Server publickey from the private key and Generator point
     server_public_key = server_private_key * curve.g
     print("generateKeys --> Server public key: ", server_public_key, "type: " , type(server_public_key))
 
@@ -66,9 +67,6 @@ def encrypt(text):
     key_hex = bytes.fromhex(compress_point2(shared_key))
     print("encrypt() --> AES KEY HEX: ",  key_hex)
     cipher = AES.new(key_hex, AES.MODE_ECB)
-    #encoded = base64.standard_b64encode(padded_text)
-    #base64Test(encoded)
-    #print("encoded: " , encoded, " lenght:", len(encoded))
     encrypted = cipher.encrypt(padded_text_bytes)
     print("encrypt() --> encrypted_text: ", encrypted)
     print("encrypt() --> encrypted_text2: ", base64.b64encode(encrypted))
@@ -119,8 +117,3 @@ def compat_ord(c):
         return c
     else:
         return ord(c)
-
-"""
-if __name__ == "__main__":
-    generateKeys()
-"""
