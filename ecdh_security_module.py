@@ -31,15 +31,16 @@ def generateKeys():
     print("generateKeys --> Server public key: ", server_public_key, "type: " , type(server_public_key))
 
 
-def generate_shared_secret(client_publickey):
+def generateSharedSecret(client_publickey):
     global shared_key
     try:
-        print("generate_shared_secret --> Init")
+        print("generateSharedSecret --> Init")
         coordinate_x = client_publickey['x_coordinate']
         coortinate_y = client_publickey['y_coordinate']
         client_curve_point = ec.Point(curve, int(coordinate_x), int(coortinate_y))
-        print("generate_shared_secret --> Client public curve point: ", client_curve_point, "type: ", type(client_curve_point))
+        print("generateSharedSecret --> Client public curve point: ", client_curve_point, "type: ", type(client_curve_point))
         shared_key = server_private_key*client_curve_point
+        print("generateSharedSecret --> Shared Key generated successful:" , compress_point2(shared_key))
         return True
     except Exception as ex:
         print("ERROR --> generate_shared_secret --> ", ex)

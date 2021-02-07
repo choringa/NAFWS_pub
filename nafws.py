@@ -55,13 +55,17 @@ def do_encrypted_login():
         requestJson = request.get_json()
         print("-----------------Request to /login_encrypted made --> ", request.get_json(), " type:", type(request.get_json()))
         encrypted_data = requestJson["encrypted_data"]
-        decryted_data = ecdh.decrypt(encrypted_data)
-        if decryted_data['password'] == 'password' and decryted_data['username'] == 'admin':
-            session['logged_in'] = True
-            return response_login_encrypted(True)
-        else:
-            print("Incorrect Credentials")
-            return response_login_encrypted(False)
+        try:
+            decryted_data = ecdh.decrypt(encrypted_data)
+            if decryted_data['password'] == 'password' and decryted_data['username'] == 'admin':
+                session['logged_in'] = True
+                return response_login_encrypted(True)
+            else:
+                print("Incorrect Credentials")
+                return response_login_encrypted(False)
+        except Exception as ex:
+            print("ERROR --> Encrypted data recived:", ex)
+            abort(400)
     else:
         print("Bad Request, No JSON:", request)
         abort(400)
@@ -73,7 +77,7 @@ def do_ecdh_exchange():
         requestJson = request.get_json()
         print("-----------------Request to /ecdh made --> ", request.get_json())
         client_public_key = requestJson['public_key']
-        shared_created = ecdh.generate_shared_secret(client_public_key)
+        shared_created = ecdh.generateSharedSecret(client_public_key)
         if(shared_created):
             return make_response(jsonify({"code": "200", "response": {"server_public_key": {"x_coordinate": str(ecdh.server_public_key.x), "y_coordinate": str(ecdh.server_public_key.y)}}}), 200)
         else:
