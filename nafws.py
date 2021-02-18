@@ -1,6 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort, make_response, jsonify, json
 import os
 import ecdh_security_module as ecdh
+from waitress import serve
 
 app = Flask(__name__)
 
@@ -107,6 +108,9 @@ def banner():
 
 
 if __name__ == "__main__":
+    createApp()
+
+def createApp():
     app.secret_key = os.urandom(12)
     banner()
     ecdh.generateKeys()
