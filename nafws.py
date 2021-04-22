@@ -103,12 +103,9 @@ def banner():
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
 
      ----------------------------By David --> david.arteaga@globant.com------------------------
-                                                V1.2.1
+                                                V1.2.2
 """)
 
-
-if __name__ == "__main__":
-    createApp()
 
 def createApp():
     app.secret_key = os.urandom(12)
@@ -117,3 +114,8 @@ def createApp():
     app.run(debug=True, host='0.0.0.0', port=5000, ssl_context=(
         'test_cert.pem', 'test_key.pem'))  # secure
     # app.run(debug=True,host='0.0.0.0', port=5000) #insecure
+
+if __name__ == "__main__":
+    #serve(app, host='0.0.0.0', port=5000, sslcontext=('test_cert.pem', 'test_key.pem'))
+    #serve(app, port=5000)
+    createApp()
