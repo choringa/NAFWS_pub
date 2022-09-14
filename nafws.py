@@ -39,36 +39,38 @@ def response_login_encrypted(was_correct):
 def do_admin_login():
     if request.is_json:
         requestJson = request.get_json()
-        print("-----------------Request to /login made --> ", request.get_json())
+        app.logger.debug(f"do_admin_login: Request made --> {request.get_json()}")
         if requestJson['password'] == 'password' and requestJson['username'] == 'admin':
+            app.logger.debug("do_admin_login: Correct Credentials")
             session['logged_in'] = True
             return home()
         else:
-            print("Incorrect Credentials")
+            app.logger.error("do_admin_login: Incorrect Credentials")
             abort(401)
     else:
-        print("Bad Request, No JSON:", request)
+        app.logger.error(f"do_admin_login: Bad Request, No JSON: {request}")
         abort(400)
 
 @app.route('/login_encrypted', methods=['POST'])
 def do_encrypted_login():
     if request.is_json:
         requestJson = request.get_json()
-        print("-----------------Request to /login_encrypted made --> ", request.get_json(), " type:", type(request.get_json()))
+        app.logger.debug(f"do_encrypted_login: Request made --> {request.get_json()}")
         encrypted_data = requestJson["encrypted_data"]
         try:
             decryted_data = ecdh.decrypt(encrypted_data)
             if decryted_data['password'] == 'password' and decryted_data['username'] == 'admin':
+                app.logger.debug("do_encrypted_login: Correct Credentials")
                 session['logged_in'] = True
                 return response_login_encrypted(True)
             else:
-                print("Incorrect Credentials")
+                app.logger.error("do_encrypted_login: Incorrect Credentials")
                 return response_login_encrypted(False)
         except Exception as ex:
-            print("ERROR --> Encrypted data recived:", ex)
+            app.logger.error(f"do_encrypted_login: Encrypted data recived:{ex}")
             abort(400)
     else:
-        print("Bad Request, No JSON:", request)
+        app.logger.error(f"do_encrypted_login: Bad Request, No JSON: {request}")
         abort(400)
 
 
@@ -76,16 +78,18 @@ def do_encrypted_login():
 def do_ecdh_exchange():
     if request.is_json:
         requestJson = request.get_json()
-        print("-----------------Request to /ecdh made --> ", request.get_json())
+        app.logger.debug(f"Request to /ecdh made --> {request.get_json()}")
         client_public_key = requestJson['public_key']
         shared_created = ecdh.generateSharedSecret(client_public_key)
         if(shared_created):
+            app.logger.debug("do_ecdh_exchange: Correct Credentials")
             return make_response(jsonify({"code": "200", "response": {"server_public_key": {"x_coordinate": str(ecdh.server_public_key.x), "y_coordinate": str(ecdh.server_public_key.y)}}}), 200)
         else:
+            app.logger.error("do_ecdh_exchange: Internal Server error creando shared key")
             return make_response(jsonify({"code": "500", "response": "Internal Server error creando shared key"}), 500)
         
     else:
-        print("Bad Request, no JSON:", request)
+        app.logger.error(f"do_ecdh_exchange: Bad Request, no JSON: {request}")
 
 
 def banner():
@@ -103,7 +107,7 @@ def banner():
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
 
      ----------------------------By David --> david.arteaga@globant.com------------------------
-                                                V1.2.2
+                                                V1.2.3
 """)
 
 
