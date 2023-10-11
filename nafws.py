@@ -79,7 +79,11 @@ def do_ecdh_exchange():
     if request.is_json:
         requestJson = request.get_json()
         app.logger.debug(f"Request to /ecdh made --> {request.get_json()}")
-        client_public_key = requestJson['public_key']
+        try:
+            client_public_key = requestJson['public_key']
+        except KeyError:
+            app.logger.error("do_ecdh_exchange: No public key on request")
+            client_public_key = ""
         shared_created = ecdh.generateSharedSecret(client_public_key)
         if(shared_created):
             app.logger.debug("do_ecdh_exchange: Correct Credentials")
